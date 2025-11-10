@@ -1,0 +1,11 @@
+*.swp
+*.swo
+*.o
+*.a
+*.dSYM
+*.so
+*.dylib
+*.pyc
+*~
+/build/
+/.vscode/
