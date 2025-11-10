@@ -105,7 +105,7 @@ ExpANN<D>::search(const Vector& x, const idx_t k) {
         std::vector<std::pair<idx_t, float>>,
         LessPair
         > heap;
-    auto szdb = _db.size();
+    idx_t szdb = _db.size();
     for(idx_t ni = 0; ni < std::min(k, szdb); ni++) {
         heap.emplace(ni, x.distance(_db[ni]));
     }
@@ -116,7 +116,7 @@ ExpANN<D>::search(const Vector& x, const idx_t k) {
             heap.emplace(ni, x.distance(_db[ni]));
         }
     }
-    std::unique_ptr<std::vector<std::pair<idx_t, float>>> ret;
+    auto ret(std::make_unique<std::vector<std::pair<idx_t, float>>>());
     while(!heap.empty()) {
         ret->push_back(heap.top());
         heap.pop();

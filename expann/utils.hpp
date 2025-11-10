@@ -34,6 +34,8 @@ inline float Vector<D>::distance(const Vector& another) const{
     for(int _ = 0; _ < D; _++) {
         delta = *pa - *pb;
         sum += delta * delta;
+        pa++;
+        pb++;
     }
     return std::sqrt(sum);
 }
