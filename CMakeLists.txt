@@ -8,10 +8,5 @@ project(expann
 set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(expann)
-
-if(EXPANN_BUILD_DEMO)
-    add_subdirectory(demos)
-endif()
-if(EXPANN_BUILD_TESTS)
-    add_subdirectory(tests)
-endif()
+add_subdirectory(demos)
+add_subdirectory(tests)

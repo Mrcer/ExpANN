@@ -1,23 +1,24 @@
-#include <expann/expann.hpp>
+#include <expann/expann.h>
 
 #include <iostream>
 
 int main() {
-    expann::ExpANN<2> ann;
+    expann::ExpANN ann(2);
 
-    std::vector<expann::Vector<2>> x = {
-        {1},
-        {2},
-        {3},
-        {4}
+    float x[] = {
+        1,0,
+        2,0,
+        3,0,
+        4,0
     };
-    expann::Vector<2> q{{{0,1}}};
+    float q[] = {0, 2.5};
+    std::pair<expann::idx_t, float> results[2];
 
-    ann.add(x);
-    auto ret = ann.search(q, 2);
+    ann.add(4, x);
+    ann.search(1, q, 2, results);
 
-    for(auto p: *ret) {
-        std::cout << p.first << " " << p.second << std::endl;
+    for(auto r: results) {
+        std::cout << r.first << " " << r.second << std::endl;
     }
     return 0;
 }

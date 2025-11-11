@@ -1,10 +1,11 @@
 set(EXPANN_SRC
-    dummy.cpp
+    expann.cpp
+    utils.cpp
 )
 
 set(EXPANN_HEADERS
-    utils.hpp
-    expann.hpp
+    utils.h
+    expann.h
 )
 
 add_library(expann ${EXPANN_SRC})
