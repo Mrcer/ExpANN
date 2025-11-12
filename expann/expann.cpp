@@ -40,48 +40,22 @@ void ExpANN::search(
         const float* x,
         idx_t k,
         std::pair<idx_t, float>* results) const {
-    auto Cmp = [](
-            const std::pair<idx_t, float>& a,
-            const std::pair<idx_t, float>& b) {
-        return a.second < b.second;
-    };
     const float* v_db = _db.data();
-    for(idx_t i = 0; i < std::min(k, _ntotal); i++) {
+    std::vector<TopK> topks(n);
+    for(idx_t ni = 0; ni < n; ni++) {
+        topks[ni].init(k, results + k * ni);
+    }
+    for(idx_t i = 0; i < _ntotal; i++) {
         const float* v_x = x;
         for(idx_t ni = 0; ni < n; ni++) {
-            auto result_ni = results + k * ni;
             float dist = l2dist(v_db, v_x, _d);
-            result_ni[i] = std::make_pair<>(i, dist);
-            std::push_heap(result_ni, result_ni + i + 1, Cmp);
-            v_x += _d;
-        }
-        v_db += _d;
-    }
-    if(k > _ntotal) {
-        for(idx_t ni = 0; ni < n; ni++) {
-            auto result_ni = results + k * ni;
-            std::sort_heap(result_ni, result_ni + _ntotal, Cmp);
-            std::fill(result_ni + _ntotal, result_ni + k, std::make_pair<>(-1, -1));
-        }
-        return;
-    }
-    for(idx_t i = k; i < _ntotal; i++) {
-        const float* v_x = x;
-        for(idx_t ni = 0; ni < n; ni++) {
-            auto result_ni = results + k * ni;
-            float dist = l2dist(v_db, v_x, _d);
-            if(dist < result_ni[0].second) {
-                std::pop_heap(result_ni, result_ni + k, Cmp);
-                result_ni[k - 1] = std::make_pair<>(i, dist);
-                std::push_heap(result_ni, result_ni + k, Cmp);
-            }
+            topks[ni].add(std::make_pair<>(i, dist));
             v_x += _d;
         }
         v_db += _d;
     }
     for(idx_t ni = 0; ni < n; ni++) {
-        auto result_ni = results + k * ni;
-        std::sort_heap(result_ni, result_ni + k, Cmp);
+        topks[ni].reorder();
     }
 }
 
